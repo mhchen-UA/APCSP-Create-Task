@@ -25,6 +25,7 @@ class Window:
         self.profit = self.revenue - self.inputCost #Profit
         self.name = "" #User's name
         self.product = ""
+        self.elasticity = 0.5 #Slope of the demand graph
         #[Title,text,demand-shift]
         self.cakeNews = [   #I placed the list of news here so that its changes can be preserved
             ["CAKES ARE UNHEALTHY","The University of Anarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
@@ -64,13 +65,13 @@ class Window:
         self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+str(self.accountBalance))
         self.textAccountBalance.setSize(self.textSize)
         self.textAccountBalance.draw(self.win)
-        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Stock: "+str(self.stock))
+        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Capital Stock: "+str(self.stock))
         self.textStock.setSize(self.textSize)
         self.textStock.draw(self.win)
         self.textRevenue = Text(Point(self.x//4,(self.y*7)//12),"Revenue: "+str(self.revenue))
         self.textRevenue.setSize(self.textSize)
         self.textRevenue.draw(self.win)
-        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Input Cost"+str(self.inputCost))
+        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Input Cost "+str(self.inputCost))
         self.textInputCost.setSize(self.textSize)
         self.textInputCost.draw(self.win)
         self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: "+str(self.revenue - self.inputCost))
@@ -104,6 +105,9 @@ class Window:
         self.yMaxRevenueLine.draw(self.win)
         self.demandText = Text(Point((self.x*24)//32,(self.y*4)//16),"Demand Curve")
         self.demandText.draw(self.win)
+        self.graphTitle = Text(Point((self.x*24)//32,self.y//32),"Aggregate Demand Graph")
+        self.graphTitle.setSize(self.textSize)
+        self.graphTitle.draw(self.win)
         
     def setAccountBalance(self,product):
         if product == "car":
@@ -114,8 +118,8 @@ class Window:
             self.accountBalance = 20000
         
     def getNews(self, product):  #gets random news
-        nonews = random.randint(0,1)
-        if nonews:
+        nonews = random.random()
+        if nonews > 0.3:
             return ["","",0]
         def cakeNews():
             if len(self.cakeNews)==0:  #Returns empty if there's no more news
@@ -159,32 +163,45 @@ class Window:
         self.newsBody.setSize(15)
         self.newsBody.draw(self.win)
 
-    def setCost(self,product):
+    def setCost(self,product,quantityBought):
         if product.lower() == "gas":
-            self.inputCost = 4
+            self.inputCost = 4 * quantityBought
         elif product.lower() == "cake":
-            self.inputCost = 3
+            self.inputCost = 3 * quantityBought
         elif product.lower() == "car":
-            self.inputCost = 5000
+            self.inputCost = 5000 * quantityBought
         self.textInputCost.undraw()
-        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Input Cost: "+str(self.inputCost))
+        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Total Cost: "+str(self.inputCost))
         self.textInputCost.setSize(self.textSize)
         self.textInputCost.draw(self.win)
         
     def start(self,product,w): #Starts from Day 1, asks for price, then calculates revenue based on graph
+        self.day += 1
+        self.setDay()
         news = w.getNews(product)
         w.setNews(news)
         self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
-        self.setCost(product)
+        self.setCost(product,1)
         self.buy()
+        self.setBalance()
+        self.setCurve()
         self.getPrice()
 
+    def setCurve(self):
+        pass # SETS CURVE POSITIONS
+        
     def getPrice(self):
-        pass
+        pass # GETS PRICE
         
     def getName(self):
         self.name = button("Name")
 
+    def setDay(self):
+        self.textDay.undraw()
+        self.textDay = Text(Point(self.x//4,self.y//12),self.name+"'s "+self.product+" shop. Day "+str(self.day)) #setting texts
+        self.textDay.setSize(self.textSize)
+        self.textDay.draw(self.win)
+        
     def setBalance(self):
         self.textAccountBalance.undraw()
         print(self.accountBalance)
@@ -194,7 +211,7 @@ class Window:
 
     def setStock(self):
         self.textStock.undraw()
-        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Stock: "+str(self.stock))
+        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Capital Stock: "+str(self.stock))
         self.textStock.setSize(self.textSize)
         self.textStock.draw(self.win)
         
@@ -205,6 +222,7 @@ class Window:
             self.stock = quantityBought
             self.setBalance()
             self.setStock()
+            self.setCost(self.product,quantityBought)
         else:
             print("Not enough money")
             self.buy()
