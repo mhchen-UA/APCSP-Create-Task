@@ -18,7 +18,6 @@ class Window:
         self.y = 600
         self.day = 0
         self.textSize = 25
-        self.e = None #Entry Object
         self.accountBalance = 0
         self.revenue = 0   #Revenue
         self.stock = 0  #Quanity owned
@@ -62,18 +61,16 @@ class Window:
         self.textDay = Text(Point(self.x//4,self.y//12),self.name+"'s "+self.product+" shop. Day "+str(self.day)) #setting texts
         self.textDay.setSize(self.textSize)
         self.textDay.draw(self.win)
-        self.e = Entry(Point((self.x//4)+30,self.y//4),20)#Setting input price box
-        self.e.draw(self.win)
-        self.eText = Text(Point((self.x//4)-80,self.y//4),"Price: $")
-        self.eText.setSize(self.textSize)
-        self.eText.draw(self.win)
-        self.textRevenue = Text(Point(self.x//4,(self.y*5)//12),"Stock: "+str(self.stock))
-        self.textRevenue.setSize(self.textSize)
-        self.textRevenue.draw(self.win)
-        self.textStock = Text(Point(self.x//4,(self.y*7)//12),"Revenue: "+str(self.revenue))
+        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+str(self.accountBalance))
+        self.textAccountBalance.setSize(self.textSize)
+        self.textAccountBalance.draw(self.win)
+        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Stock: "+str(self.stock))
         self.textStock.setSize(self.textSize)
         self.textStock.draw(self.win)
-        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Input Cost: "+str(self.inputCost))
+        self.textRevenue = Text(Point(self.x//4,(self.y*7)//12),"Revenue: "+str(self.revenue))
+        self.textRevenue.setSize(self.textSize)
+        self.textRevenue.draw(self.win)
+        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Input Cost"+str(self.inputCost))
         self.textInputCost.setSize(self.textSize)
         self.textInputCost.draw(self.win)
         self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: "+str(self.revenue - self.inputCost))
@@ -96,6 +93,17 @@ class Window:
         self.demandCurve = Line(Point((self.x*9)//16,self.y//8),Point((self.x*27)//32,(self.y*7)//16))
         self.demandCurve.setWidth(2)
         self.demandCurve.draw(self.win)
+        self.xMidPoint = ((self.demandCurve.getP2().getX() - self.demandCurve.getP1().getX())//2) + self.demandCurve.getP1().getX()
+        self.yMidPoint = ((self.demandCurve.getP2().getY() - self.demandCurve.getP1().getY())//2) + self.demandCurve.getP1().getY()
+        self.maxRevenue = Circle(Point(self.xMidPoint,self.yMidPoint),3)
+        self.maxRevenue.setFill("Black")
+        self.xMaxRevenueLine = Line(Point((self.x*9)//16,self.yMidPoint),Point(self.xMidPoint,self.yMidPoint))
+        self.yMaxRevenueLine = Line(Point(self.xMidPoint,self.yMidPoint),Point(self.xMidPoint,(self.y*7)//16))
+        self.maxRevenue.draw(self.win)
+        self.xMaxRevenueLine.draw(self.win)
+        self.yMaxRevenueLine.draw(self.win)
+        self.demandText = Text(Point((self.x*24)//32,(self.y*4)//16),"Demand Curve")
+        self.demandText.draw(self.win)
         
     def setAccountBalance(self,product):
         if product == "car":
@@ -137,6 +145,9 @@ class Window:
             return carNews()
         elif product.lower() == "gas":
             return gasNews()
+            """
+            I'll find a way to make abstraction here
+            """
 
     def setNews(self,product):
         self.newsBox = Rectangle(Point((self.x*9)//16,(self.y*19)//32),Point((self.x*15)//16,(self.y*15)//16))
@@ -165,14 +176,40 @@ class Window:
         w.setNews(news)
         self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
         self.setCost(product)
-        self.setAccountBalance(product)
         self.buy()
+        self.getPrice()
 
+    def getPrice(self):
+        pass
+        
     def getName(self):
         self.name = button("Name")
 
+    def setBalance(self):
+        self.textAccountBalance.undraw()
+        print(self.accountBalance)
+        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+str(self.accountBalance))
+        self.textAccountBalance.setSize(self.textSize)
+        self.textAccountBalance.draw(self.win)
+
+    def setStock(self):
+        self.textStock.undraw()
+        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Stock: "+str(self.stock))
+        self.textStock.setSize(self.textSize)
+        self.textStock.draw(self.win)
+        
     def buy(self):
-        quantityBought = button("Input Cost is "+str(self.inputCost)+" Per Unit. How much do you want to buy?",12)
+        quantityBought = int(button("Input Cost is "+str(self.inputCost)+" Per Unit. How much do you want to buy?",12))
+        if quantityBought * self.inputCost <= self.accountBalance:
+            self.accountBalance -= self.inputCost * quantityBought
+            self.stock = quantityBought
+            self.setBalance()
+            self.setStock()
+        else:
+            print("Not enough money")
+            self.buy()
+
+    
 
 def button(text,textSize=24): #I Used ABSTRACTION to make a button with a flexible text for input
         w = GraphWin("",300,200)
@@ -202,6 +239,7 @@ def main():
     w = Window()
     w.getName()
     product = w.getProduct()
+    w.setAccountBalance(w.product)
     w.createInterface() 
     w.setGraph()
     w.start(product,w)
