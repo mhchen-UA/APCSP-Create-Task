@@ -26,9 +26,10 @@ class Window:
         self.name = "" #User's name
         self.product = ""
         self.elasticity = 0.5 #Slope of the demand graph
+        self.price = 0 #Price of the product
         #[Title,text,demand-shift]
         self.cakeNews = [   #I placed the list of news here so that its changes can be preserved
-            ["CAKES ARE UNHEALTHY","The University of Anarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
+            ["CAKES ARE UNHEALTHY","The University of Antarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
             ["POLICE SHOOTING SPARKS\nPROTESTS","An amateur video shot by a\nbystander, officer Repucci fatally shot an\nunarmed 9 year old girl while she was\nmaking cake. Protesters are encouraging\neveryone to buy cakes to support their\ncampaign in prosecuting Repucci.",50],
             ["NATIONAL CAKE DAY","The President of the United States has\nofficial declared this day to be National\nCake Day. Citizens world-wide are\ncelebrating by buying more cake.",200],
             ]
@@ -43,6 +44,7 @@ class Window:
             ["RISE IN ELECTRIC CARS","People are starting to use\nelectric cars more than \ngas-powered cars.",-10],
             ["NEW AMUSEMENT PARK BUILT","As part of the mayor\'s\n initiative to attract more\nvisitors to town, the new amusement\n park will bring in more travelers.",20]
             ]
+        self.newsList = [self.cakeNews,self.carNews,self.gasNews]
     def createInterface(self): #makes the window and divides the sections with lines
         self.win = GraphWin("Window",self.x,self.y)
         self.line1 = Line(Point(self.x//2,self.y),Point(self.x//2,0))
@@ -110,16 +112,18 @@ class Window:
         self.graphTitle.draw(self.win)
         
     def setAccountBalance(self,product):
-        if product == "car":
+        if product.lower() == "car":
             self.accountBalance = 100000
-        elif product == "cake":
+        elif product.lower() == "cake":
             self.accountBalance = 5000
-        elif product == "gas":
+        elif product.lower() == "gas":
             self.accountBalance = 20000
         
     def getNews(self, product):  #gets random news
+        if self.day == 1:
+            return ["NEW STORE IN\\nTOWN","A new store named "+self.name+"\nis opened for the first day.\nLet\'s see how smart they are!",0]
         nonews = random.random()
-        if nonews > 0.3:
+        if nonews > 0.3: #No news happening
             return ["","",0]
         def cakeNews():
             if len(self.cakeNews)==0:  #Returns empty if there's no more news
@@ -142,7 +146,7 @@ class Window:
             theNews = self.gasNews[selector] 
             self.gasNews.remove(theNews)   #Makes sure a news doesn't repeat
             return theNews
-        newsObject = None
+
         if product.lower() == "cake":
             return cakeNews()
         elif product.lower() == "car":
@@ -188,10 +192,16 @@ class Window:
         self.getPrice()
 
     def setCurve(self):
-        pass # SETS CURVE POSITIONS
+        # SETS CURVE POSITIONS
+        print(self.product)
+        """
+        1. Set Elasticity based on product
+        2. Use Elasticity to determine x  and y intercept
+        3. Find the mid point thingy
+        """
         
     def getPrice(self):
-        pass # GETS PRICE
+        self.price = int(button("Name your Price"))
         
     def getName(self):
         self.name = button("Name")
@@ -226,7 +236,6 @@ class Window:
         else:
             print("Not enough money")
             self.buy()
-
     
 
 def button(text,textSize=24): #I Used ABSTRACTION to make a button with a flexible text for input
