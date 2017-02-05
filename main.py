@@ -121,41 +121,25 @@ class Window:
         
     def getNews(self, product):  #gets random news
         if self.day == 1:
-            return ["NEW STORE IN\\nTOWN","A new store named "+self.name+"\nis opened for the first day.\nLet\'s see how smart they are!",0]
+            return ["NEW STORE IN\nTOWN","A new store named "+self.name+"\nis opened for the first day.\nLet\'s see how smart they are!",0]
         nonews = random.random()
         if nonews > 0.3: #No news happening
             return ["","",0]
-        def cakeNews():
-            if len(self.cakeNews)==0:  #Returns empty if there's no more news
-                return ["","",0]
-            selector = random.randint(0,len(self.cakeNews)-1)
-            theNews = self.cakeNews[selector] 
-            self.cakeNews.remove(theNews)   #Makes sure a news doesn't repeat
-            return theNews
-        def carNews(): 
-            if len(self.carNews)==0:  #Returns empty if there's no more news
-                return ["","",0]
-            selector = random.randint(0,len(self.carNews)-1)
-            theNews = self.carNews[selector] 
-            self.carNews.remove(theNews)   #Makes sure a news doesn't repeat
-            return theNews
-        def gasNews():
-            if len(self.gasNews)==0:  #Returns empty if there's no more news
-                return ["","",0]
-            selector = random.randint(0,len(self.gasNews)-1)
-            theNews = self.gasNews[selector] 
-            self.gasNews.remove(theNews)   #Makes sure a news doesn't repeat
-            return theNews
-
+        #BEGIN ABSTRACTION:
+        x = 0
         if product.lower() == "cake":
-            return cakeNews()
+            x = 0
         elif product.lower() == "car":
-            return carNews()
+            x = 1
         elif product.lower() == "gas":
-            return gasNews()
-            """
-            I'll find a way to make abstraction here
-            """
+            x = 2
+        if len(self.newsList[x])==0:
+            return ["","",0]
+        selector = random.randint(0,len(self.newsList[x])-1)
+        theNews = self.newsList[x][selector]
+        self.newsList[x].remove(theNews)
+        return theNews
+
 
     def setNews(self,product):
         self.newsBox = Rectangle(Point((self.x*9)//16,(self.y*19)//32),Point((self.x*15)//16,(self.y*15)//16))
