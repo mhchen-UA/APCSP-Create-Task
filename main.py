@@ -25,8 +25,9 @@ class Window:
         self.profit = self.revenue - self.inputCost #Profit
         self.name = "" #User's name
         self.product = ""
-        self.elasticity = 0.5 #Slope of the demand graph
         self.price = 0 #Price of the product
+        self.xIntercept = 0 #For Demand Curve
+        self.yIntercept = 0
         #[Title,text,demand-shift]
         self.cakeNews = [   #I placed the list of news here so that its changes can be preserved
             ["CAKES ARE UNHEALTHY","The University of Antarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
@@ -45,6 +46,7 @@ class Window:
             ["NEW AMUSEMENT PARK BUILT","As part of the mayor\'s\n initiative to attract more\nvisitors to town, the new amusement\n park will bring in more travelers.",20]
             ]
         self.newsList = [self.cakeNews,self.carNews,self.gasNews]
+        
     def createInterface(self): #makes the window and divides the sections with lines
         self.win = GraphWin("Window",self.x,self.y)
         self.line1 = Line(Point(self.x//2,self.y),Point(self.x//2,0))
@@ -105,11 +107,15 @@ class Window:
         self.maxRevenue.draw(self.win)
         self.xMaxRevenueLine.draw(self.win)
         self.yMaxRevenueLine.draw(self.win)
-        self.demandText = Text(Point((self.x*24)//32,(self.y*4)//16),"Demand Curve")
+        self.demandText = Text(Point((self.x*26)//32,(self.y*5)//16),"Demand Curve")
         self.demandText.draw(self.win)
         self.graphTitle = Text(Point((self.x*24)//32,self.y//32),"Aggregate Demand Graph")
         self.graphTitle.setSize(self.textSize)
         self.graphTitle.draw(self.win)
+        self.yAxis = Text(Point((self.x*17)//32,(self.y)//4),"Price")
+        self.yAxis.draw(self.win)
+        self.xAxis = Text(Point((self.x*12)//16,(self.y*15)//32),"Quantity")
+        self.xAxis.draw(self.win)
         
     def setAccountBalance(self,product):
         if product.lower() == "car":
@@ -174,19 +180,29 @@ class Window:
         self.setBalance()
         self.setCurve()
         self.getPrice()
+        pass #Gets Revenue
+        self.setProfit()
 
     def setCurve(self):
         # SETS CURVE POSITIONS
         print(self.product)
+        self.xIntercept = 0
+        self.yIntercept = 0
         """
         1. Set Elasticity based on product
         2. Use Elasticity to determine x  and y intercept
         3. Find the mid point thingy
         """
-        
+    
     def getPrice(self):
         self.price = int(button("Name your Price"))
-        
+
+    def setProfit(self):
+        self.textProfit.undraw()
+        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: "+str(self.revenue - self.inputCost))
+        self.textProfit.setSize(self.textSize)
+        self.textProfit.draw(self.win)
+    
     def getName(self):
         self.name = button("Name")
 
