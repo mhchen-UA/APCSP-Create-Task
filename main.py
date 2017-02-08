@@ -182,12 +182,19 @@ class Window:
         self.getPrice()
         pass #Gets Revenue
         self.setProfit()
+        time.sleep(5)
+        self.newsTitle.undraw()
+        self.newsBody.undraw()
 
     def setCurve(self):
-        # SETS CURVE POSITIONS
+        # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
         print(self.product)
-        self.xIntercept = 0
-        self.yIntercept = 0
+        self.xIntercept = 10
+        self.yIntercept = 10
+        self.xInterceptText = Text(Point(self.demandCurve.getP2().getX(),(self.y*15)//32),"("+str(self.xIntercept)+", 0)")
+        self.xInterceptText.draw(self.win)
+        self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
+        self.yInterceptText.draw(self.win)
         """
         1. Set Elasticity based on product
         2. Use Elasticity to determine x  and y intercept
