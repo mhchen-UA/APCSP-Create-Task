@@ -179,10 +179,13 @@ class Window:
         self.setBalance()
         self.setIntercepts()
         self.setCurve()
+        #Shift curve by news
         self.buy()
         self.getPrice()
-        pass #Gets Revenue
+        self.setRevenue()
         self.setProfit()
+        #Decrease stock
+        #increment day
         time.sleep(5)
         self.newsTitle.undraw()
         self.newsBody.undraw()
@@ -207,25 +210,41 @@ class Window:
         self.yInterceptText.draw(self.win)
         self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
         self.textMidLine.draw(self.win)
+    
+       
+    def setRevenue(self):
         """
         1. Make an equation
         y = -ax + b
-        price (-1*slope*x) + self.yIntercept
-        slope = self.yIntercept//self.xIntercept
-        price = (-1*(self.yIntercept//self.xIntercept)*Q) + self.yIntercept
+        price = (-1*slope*x) + self.yIntercept
+        slope = self.yIntercept/self.xIntercept
+        price = (-1*(self.yIntercept/self.xIntercept)*Q) + self.yIntercept
         
         Since we're putting PRICE as input, we need to find the INVERSE of the equation
 
-        Quantity = ((self.price - self.yIntercept) * self.xIntercept)//(-1*self.yIntercept) = Quantity
+        quantity = -1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)
         Revenue = Price * Quantity
         """
+        print(self.yIntercept)
+        print(self.xIntercept)
+        print(self.price)
+        if self.price > self.yIntercept:
+            self.revenue = 0
+        else:
+            self.revenue = round(self.price * (-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)),2)
+        print(self.revenue)
+        self.textRevenue.undraw()
+        self.textRevenue = Text(Point(self.x//4,(self.y*7)//12),"Revenue: $"+str(round(self.revenue,2)))
+        self.textRevenue.setSize(self.textSize)
+        self.textRevenue.draw(self.win)
+        #THE REVENUE STILL DOES NOT ACCURATELY CALCULATE THE AREA!!
     
     def getPrice(self):
         self.price = int(button("Name your Price"))
 
     def setProfit(self):
         self.textProfit.undraw()
-        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: "+str(self.revenue - self.inputCost))
+        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: $"+str(self.revenue - self.inputCost))
         self.textProfit.setSize(self.textSize)
         self.textProfit.draw(self.win)
     
@@ -240,8 +259,7 @@ class Window:
         
     def setBalance(self):
         self.textAccountBalance.undraw()
-        print(self.accountBalance)
-        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+str(self.accountBalance))
+        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+(str(round(self.accountBalance,2))))
         self.textAccountBalance.setSize(self.textSize)
         self.textAccountBalance.draw(self.win)
 
