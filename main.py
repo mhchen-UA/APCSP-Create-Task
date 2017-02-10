@@ -188,17 +188,18 @@ class Window:
 
     def setCurve(self):
         # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
-        print(self.product)
         self.xIntercept = 10
         self.yIntercept = 10
+        
         self.xInterceptText = Text(Point(self.demandCurve.getP2().getX(),(self.y*15)//32),"("+str(self.xIntercept)+", 0)")
         self.xInterceptText.draw(self.win)
         self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
         self.yInterceptText.draw(self.win)
+        self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
+        self.textMidLine.draw(self.win)
         """
         1. Set Elasticity based on product
-        2. Use Elasticity to determine x  and y intercept
-        3. Find the mid point thingy
+        2. Use Elasticity to determine x  and y intercept\
         """
     
     def getPrice(self):
