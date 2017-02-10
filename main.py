@@ -127,7 +127,7 @@ class Window:
         
     def getNews(self, product):  #gets random news
         if self.day == 1:
-            return ["NEW STORE IN\nTOWN","A new store named "+self.name+"\nis opened for the first day.\nLet\'s see how smart they are!",0]
+            return ["NEW STORE IN\nTOWN","A new store named "+self.name+"\'s "+self.product+"\nshop is opened for the first day.\nLet\'s see how smart they are!",0]
         nonews = random.random()
         if nonews > 0.3: #No news happening
             return ["","",0]
@@ -176,9 +176,10 @@ class Window:
         w.setNews(news)
         self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
         self.setCost(product,1)
-        self.buy()
         self.setBalance()
+        self.setIntercepts()
         self.setCurve()
+        self.buy()
         self.getPrice()
         pass #Gets Revenue
         self.setProfit()
@@ -186,11 +187,20 @@ class Window:
         self.newsTitle.undraw()
         self.newsBody.undraw()
 
+    def setIntercepts(self):
+        if self.product.lower() == "cake":
+            self.xIntercept = 40
+            self.yIntercept = 27
+        if self.product.lower() == "car":
+            self.xIntercept = 5
+            self.yIntercept = 9000
+        if self.product.lower() == "gas":
+            self.xIntercept = 1000
+            self.yIntercept = 5
+        
     def setCurve(self):
         # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
-        self.xIntercept = 10
-        self.yIntercept = 10
-        
+        #shift the intercepts by demand
         self.xInterceptText = Text(Point(self.demandCurve.getP2().getX(),(self.y*15)//32),"("+str(self.xIntercept)+", 0)")
         self.xInterceptText.draw(self.win)
         self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
@@ -198,8 +208,16 @@ class Window:
         self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
         self.textMidLine.draw(self.win)
         """
-        1. Set Elasticity based on product
-        2. Use Elasticity to determine x  and y intercept\
+        1. Make an equation
+        y = -ax + b
+        price (-1*slope*x) + self.yIntercept
+        slope = self.yIntercept//self.xIntercept
+        price = (-1*(self.yIntercept//self.xIntercept)*Q) + self.yIntercept
+        
+        Since we're putting PRICE as input, we need to find the INVERSE of the equation
+
+        Quantity = ((self.price - self.yIntercept) * self.xIntercept)//(-1*self.yIntercept) = Quantity
+        Revenue = Price * Quantity
         """
     
     def getPrice(self):
