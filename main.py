@@ -164,10 +164,7 @@ class Window:
             self.inputCost = 3 * quantityBought
         elif product.lower() == "car":
             self.inputCost = 5000 * quantityBought
-        self.textInputCost.undraw()
-        self.textInputCost = Text(Point(self.x//4,(self.y*3)//4),"Total Cost: "+str(self.inputCost))
-        self.textInputCost.setSize(self.textSize)
-        self.textInputCost.draw(self.win)
+        self.textInputCost.setText("Total Cost: "+str(self.inputCost))
         
     def start(self,product,w): #Starts from Day 1, asks for price, then calculates revenue based on graph
         self.day += 1
@@ -193,13 +190,13 @@ class Window:
     def setIntercepts(self):
         if self.product.lower() == "cake":
             self.xIntercept = 40
-            self.yIntercept = 27
+            self.yIntercept = 28
         if self.product.lower() == "car":
-            self.xIntercept = 5
+            self.xIntercept = 6
             self.yIntercept = 9000
         if self.product.lower() == "gas":
             self.xIntercept = 1000
-            self.yIntercept = 5
+            self.yIntercept = 6
         
     def setCurve(self):
         # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
@@ -215,9 +212,9 @@ class Window:
     def setRevenue(self):
         """
         1. Make an equation
-        y = -ax + b
-        price = (-1*slope*x) + self.yIntercept
-        slope = self.yIntercept/self.xIntercept
+        y = ax + b
+        price = (slope*x) + self.yIntercept
+        slope = (self.yIntercept*-1)/(self.xIntercept)
         price = (-1*(self.yIntercept/self.xIntercept)*Q) + self.yIntercept
         
         Since we're putting PRICE as input, we need to find the INVERSE of the equation
@@ -225,49 +222,29 @@ class Window:
         quantity = -1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)
         Revenue = Price * Quantity
         """
-        print(self.yIntercept)
-        print(self.xIntercept)
-        print(self.price)
         if self.price > self.yIntercept:
             self.revenue = 0
         else:
             self.revenue = round(self.price * (-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)),2)
-        print(self.revenue)
-        self.textRevenue.undraw()
-        self.textRevenue = Text(Point(self.x//4,(self.y*7)//12),"Revenue: $"+str(round(self.revenue,2)))
-        self.textRevenue.setSize(self.textSize)
-        self.textRevenue.draw(self.win)
-        #THE REVENUE STILL DOES NOT ACCURATELY CALCULATE THE AREA!!
+        self.textRevenue.setText("Revenue: $"+str(round(self.revenue,2)))
     
     def getPrice(self):
         self.price = int(button("Name your Price"))
 
     def setProfit(self):
-        self.textProfit.undraw()
-        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: $"+str(round(self.revenue - self.inputCost,2)))
-        self.textProfit.setSize(self.textSize)
-        self.textProfit.draw(self.win)
-    
+        self.textProfit.setText("Profit: $"+str(round(self.revenue - self.inputCost,2)))
+        
     def getName(self):
         self.name = button("Name")
 
     def setDay(self):
-        self.textDay.undraw()
-        self.textDay = Text(Point(self.x//4,self.y//12),self.name+"'s "+self.product+" shop. Day "+str(self.day)) #setting texts
-        self.textDay.setSize(self.textSize)
-        self.textDay.draw(self.win)
+        self.textDay.setText(self.name+"'s "+self.product+" shop. Day "+str(self.day))
         
     def setBalance(self):
-        self.textAccountBalance.undraw()
-        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+(str(round(self.accountBalance,2))))
-        self.textAccountBalance.setSize(self.textSize)
-        self.textAccountBalance.draw(self.win)
+        self.textAccountBalance.setText("Account Balance: $"+(str(round(self.accountBalance,2))))
 
     def setStock(self):
-        self.textStock.undraw()
-        self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Capital Stock: "+str(self.stock))
-        self.textStock.setSize(self.textSize)
-        self.textStock.draw(self.win)
+        self.textStock.setText("Capital Stock: "+str(self.stock))
         
     def buy(self):
         quantityBought = int(button("Input Cost is "+str(self.inputCost)+" Per Unit. How much do you want to buy?",12))
