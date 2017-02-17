@@ -4,7 +4,7 @@
 | |\ \_/ /| |  _  |  _| | |___  |  _  |   |  ___| | |     | |    | |___  |  ___| \   _  |
 | | \___/ | | | | | |_  |  _  | | |_| |_  | |___  | |     | |__  |  _  | | |___   | | | |
 |_|       |_| |_| |___| |_| |_| |_______| |_____| |_|     |____| |_| |_| |_____|  |_| |_|     
- Fixed Input Cost Market Simulation
+ Fixed Input Cost Market Simulation 
  Date: 1/31/17
  Period:1
  """
@@ -244,7 +244,7 @@ class Window:
 
     def setProfit(self):
         self.textProfit.undraw()
-        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: $"+str(self.revenue - self.inputCost))
+        self.textProfit = Text(Point(self.x//4,(self.y*11)//12),"Profit: $"+str(round(self.revenue - self.inputCost,2)))
         self.textProfit.setSize(self.textSize)
         self.textProfit.draw(self.win)
     
