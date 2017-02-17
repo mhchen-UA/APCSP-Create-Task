@@ -28,6 +28,7 @@ class Window:
         self.price = 0 #Price of the product
         self.xIntercept = 0 #For Demand Curve
         self.yIntercept = 0
+        self.quantitySold = 0
         #[Title,text,demand-shift]
         self.cakeNews = [   #I placed the list of news here so that its changes can be preserved
             ["CAKES ARE UNHEALTHY","The University of Antarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
@@ -165,27 +166,6 @@ class Window:
         elif product.lower() == "car":
             self.inputCost = 5000 * quantityBought
         self.textInputCost.setText("Total Cost: "+str(self.inputCost))
-        
-    def start(self,product,w): #Starts from Day 1, asks for price, then calculates revenue based on graph
-        self.day += 1
-        self.setDay()
-        news = w.getNews(product)
-        w.setNews(news)
-        self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
-        self.setCost(product,1)
-        self.setBalance()
-        self.setIntercepts()
-        self.setCurve()
-        #Shift curve by news
-        self.buy()
-        self.getPrice()
-        self.setRevenue()
-        self.setProfit()
-        #Decrease stock
-        #increment day
-        time.sleep(5)
-        self.newsTitle.undraw()
-        self.newsBody.undraw()
 
     def setIntercepts(self):
         if self.product.lower() == "cake":
@@ -207,7 +187,13 @@ class Window:
         self.yInterceptText.draw(self.win)
         self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
         self.textMidLine.draw(self.win)
-    
+
+    def shiftCurve(self,product):
+        tempX = self.xIntercept 
+        self.xIntercept += product[2]
+        self.yIntercept += (self.yIntercept/tempX)*(product[2])
+        self.xInterceptText.setText("("+str(self.xIntercept)+", 0)")
+        self.yInterceptText.setText("(0, "+str(self.yIntercept)+")")
        
     def setRevenue(self):
         """
@@ -225,17 +211,22 @@ class Window:
         if self.price > self.yIntercept:
             self.revenue = 0
         else:
-            self.revenue = round(self.price * (-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)),2)
+            self.quantitySold = round((-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)))
+        self.revenue = round(self.price *self.quantitySold,2)
         self.textRevenue.setText("Revenue: $"+str(round(self.revenue,2)))
+        
+    def decreaseStock(self):
+        self.stock -= self.quantitySold
+        self.textStock.setText("Capital Stock: "+str(self.stock))
     
     def getPrice(self):
-        self.price = int(button("Name your Price"))
+        return int(button("Name your Price"))
 
     def setProfit(self):
         self.textProfit.setText("Profit: $"+str(round(self.revenue - self.inputCost,2)))
         
     def getName(self):
-        self.name = button("Name")
+        return button("Name")
 
     def setDay(self):
         self.textDay.setText(self.name+"'s "+self.product+" shop. Day "+str(self.day))
@@ -255,11 +246,33 @@ class Window:
             self.setStock()
             self.setCost(self.product,quantityBought)
         else:
-            print("Not enough money")
+            button("Not enough money",24,False)
             self.buy()
-    
 
-def button(text,textSize=24): #I Used ABSTRACTION to make a button with a flexible text for input
+    def start(self,product,w): #Starts from Day 1, asks for price, then calculates revenue based on graph
+        self.day += 1
+        self.setDay()
+        news = w.getNews(product)
+        w.setNews(news)
+        self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
+        self.setCost(product,1)
+        self.setBalance()
+        self.setIntercepts()
+        self.setCurve()
+        self.loopDay(news)
+        self.newsTitle.undraw()
+        self.newsBody.undraw()
+
+    def loopDay(self,news):  #Only certain parts need to be looped
+        self.shiftCurve(news)
+        self.buy()
+        self.price = self.getPrice()
+        self.setRevenue()
+        self.setProfit()
+        self.decreaseStock()
+        time.sleep(5)
+    
+def button(text,textSize=24,entry=True): #I Used ABSTRACTION to make a button with a flexible text for input
         w = GraphWin("",300,200)
         TEXT = Text(Point(150,30),text)
         TEXT.setSize(textSize)
@@ -267,6 +280,8 @@ def button(text,textSize=24): #I Used ABSTRACTION to make a button with a flexib
         e = Entry(Point(150,75),20)
         e.setSize(20)
         e.draw(w)
+        if not entry:
+            e.undraw()
         button = Rectangle(Point(100,110),Point(200,150))
         button.setFill("Cyan") #Making a submit button
         button.draw(w)
@@ -285,7 +300,7 @@ def button(text,textSize=24): #I Used ABSTRACTION to make a button with a flexib
 
 def main():
     w = Window()
-    w.getName()
+    w.name = w.getName()
     product = w.getProduct()
     w.setAccountBalance(w.product)
     w.createInterface() 
