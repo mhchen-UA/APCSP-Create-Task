@@ -91,6 +91,7 @@ class Window:
         if product.lower() == "cake" or product.lower() == "car" or product.lower() == "gas":   
             self.product = product
             return product
+        button("Only choose Gas, Car, or Cake",20,entry=False)
         return self.getProduct()
     
     def setGraph(self): #create curve based on elasticity
