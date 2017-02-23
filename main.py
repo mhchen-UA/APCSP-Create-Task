@@ -161,12 +161,12 @@ class Window:
 
     def setCost(self,product,quantityBought):
         if product.lower() == "gas":
-            self.inputCost = 4 * quantityBought
+            self.totalInputCost = 4 * quantityBought
         elif product.lower() == "cake":
-            self.inputCost = 3 * quantityBought
+            self.totalInputCost = 3 * quantityBought
         elif product.lower() == "car":
-            self.inputCost = 5000 * quantityBought
-        self.textInputCost.setText("Total Cost: "+str(self.inputCost))
+            self.totalInputCost = 5000 * quantityBought
+        self.textInputCost.setText("Total Cost: "+str(self.totalInputCost))
 
     def setIntercepts(self):
         if self.product.lower() == "cake":
@@ -260,9 +260,8 @@ class Window:
         self.setBalance()
         self.setIntercepts()
         self.setCurve()
-        self.loopDay(news)
-        self.newsTitle.undraw()
-        self.newsBody.undraw()
+        while True:
+            self.loopDay(news)
 
     def loopDay(self,news):  #Only certain parts need to be looped
         self.shiftCurve(news)
@@ -272,6 +271,8 @@ class Window:
         self.setProfit()
         self.decreaseStock()
         time.sleep(5)
+        self.newsTitle.undraw()
+        self.newsBody.undraw()
     
 def button(text,textSize=24,entry=True): #I Used ABSTRACTION to make a button with a flexible text for input
         w = GraphWin("",300,200)
