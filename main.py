@@ -22,6 +22,7 @@ class Window:
         self.revenue = 0   #Revenue
         self.stock = 0  #Quanity owned
         self.inputCost = 0 #Input Cost
+        self.totalInputCost = 0 #Input Cost * Quantity Bought
         self.profit = self.revenue - self.inputCost #Profit
         self.name = "" #User's name
         self.product = ""
@@ -118,7 +119,7 @@ class Window:
         self.yAxis.draw(self.win)
         self.xAxis = Text(Point((self.x*12)//16,(self.y*15)//32),"Quantity")
         self.xAxis.draw(self.win)
-        
+
     def setAccountBalance(self,product):
         if product.lower() == "car":
             self.accountBalance = 100000
@@ -161,12 +162,13 @@ class Window:
 
     def setCost(self,product,quantityBought):
         if product.lower() == "gas":
-            self.totalInputCost = 4 * quantityBought
+            self.inputCost = 4 #* quantityBought
         elif product.lower() == "cake":
-            self.totalInputCost = 3 * quantityBought
+            self.inputCost = 3 #* quantityBought
         elif product.lower() == "car":
-            self.totalInputCost = 5000 * quantityBought
-        self.textInputCost.setText("Total Cost: "+str(self.totalInputCost))
+            self.inputCost = 5000 #* quantityBought
+        self.textInputCost.setText("Total Cost: "+str(self.inputCost*quantityBought))
+        self.totalInputCost = self.inputCost*quantityBought
 
     def setIntercepts(self):
         if self.product.lower() == "cake":
@@ -195,6 +197,7 @@ class Window:
         self.yIntercept += (self.yIntercept/tempX)*(product[2])
         self.xInterceptText.setText("("+str(self.xIntercept)+", 0)")
         self.yInterceptText.setText("(0, "+str(self.yIntercept)+")")
+        self.setCurve()
        
     def setRevenue(self):
         """
@@ -224,7 +227,7 @@ class Window:
         return int(button("Name your Price"))
 
     def setProfit(self):
-        self.textProfit.setText("Profit: $"+str(round(self.revenue - self.inputCost,2)))
+        self.textProfit.setText("Profit: $"+str(round(self.revenue - (self.totalInputCost),2)))
         
     def getName(self):
         return button("Name")
@@ -242,7 +245,7 @@ class Window:
         quantityBought = int(button("Input Cost is "+str(self.inputCost)+" Per Unit. How much do you want to buy?",12))
         if quantityBought * self.inputCost <= self.accountBalance:
             self.accountBalance -= self.inputCost * quantityBought
-            self.stock = quantityBought
+            self.stock += quantityBought
             self.setBalance()
             self.setStock()
             self.setCost(self.product,quantityBought)
@@ -253,17 +256,16 @@ class Window:
     def start(self,product,w): #Starts from Day 1, asks for price, then calculates revenue based on graph
         self.day += 1
         self.setDay()
-        news = w.getNews(product)
-        w.setNews(news)
-        self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
         self.setCost(product,1)
         self.setBalance()
         self.setIntercepts()
         self.setCurve()
         while True:
-            self.loopDay(news)
+            self.loopDay(product,w)
 
-    def loopDay(self,news):  #Only certain parts need to be looped
+    def loopDay(self,product,w):  #Only certain parts need to be looped
+        news = w.getNews(product)
+        w.setNews(news)
         self.shiftCurve(news)
         self.buy()
         self.price = self.getPrice()
@@ -273,6 +275,9 @@ class Window:
         time.sleep(5)
         self.newsTitle.undraw()
         self.newsBody.undraw()
+        self.day+=1
+        self.setDay()
+        self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
     
 def button(text,textSize=24,entry=True): #I Used ABSTRACTION to make a button with a flexible text for input
         w = GraphWin("",300,200)
