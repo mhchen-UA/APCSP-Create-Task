@@ -185,10 +185,13 @@ class Window:
         # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
         #shift the intercepts by demand
         self.xInterceptText = Text(Point(self.demandCurve.getP2().getX(),(self.y*15)//32),"("+str(self.xIntercept)+", 0)")
+        self.xInterceptText.undraw()
         self.xInterceptText.draw(self.win)
         self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
+        self.yInterceptText.undraw()
         self.yInterceptText.draw(self.win)
         self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
+        self.textMidLine.undraw()
         self.textMidLine.draw(self.win)
 
     def shiftCurve(self,product):
@@ -212,11 +215,14 @@ class Window:
         quantity = -1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)
         Revenue = Price * Quantity
         """
+        print(self.price)
+        print(self.yIntercept)
         if self.price > self.yIntercept:
             self.revenue = 0
         else:
             self.quantitySold = round((-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)))
         self.revenue = round(self.price *self.quantitySold,2)
+        #PROBLEM: IF THE ABOVE CODE IS INDENTED, THE REVENUE IS CORRECT, BUT THE GRAPH TEXTS OVERLAPS
         self.textRevenue.setText("Revenue: $"+str(round(self.revenue,2)))
         
     def decreaseStock(self):
