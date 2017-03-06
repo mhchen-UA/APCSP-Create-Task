@@ -221,6 +221,7 @@ class Window:
             self.revenue = 0
         else:
             self.quantitySold = round((-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)))
+            self.revenue = round(self.price *self.quantitySold,2)
         self.revenue = round(self.price *self.quantitySold,2)
         #PROBLEM: IF THE ABOVE CODE IS INDENTED, THE REVENUE IS CORRECT, BUT THE GRAPH TEXTS OVERLAPS
         self.textRevenue.setText("Revenue: $"+str(round(self.revenue,2)))
@@ -233,13 +234,18 @@ class Window:
         return int(button("Name your Price"))
 
     def setProfit(self):
-        self.textProfit.setText("Profit: $"+str(round(self.revenue - (self.totalInputCost),2)))
+        self.profit = round(self.revenue - (self.totalInputCost),2)
+        self.textProfit.setText("Profit: $"+str(self.profit))
         
     def getName(self):
         return button("Name")
 
     def setDay(self):
         self.textDay.setText(self.name+"'s "+self.product+" shop. Day "+str(self.day))
+
+    def changeBalance(self):
+        self.accountBalance += self.profit
+        self.setBalance()
         
     def setBalance(self):
         self.textAccountBalance.setText("Account Balance: $"+(str(round(self.accountBalance,2))))
@@ -278,6 +284,7 @@ class Window:
         self.setRevenue()
         self.setProfit()
         self.decreaseStock()
+        self.changeBalance()
         time.sleep(5)
         self.newsTitle.undraw()
         self.newsBody.undraw()
