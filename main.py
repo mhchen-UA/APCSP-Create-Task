@@ -185,22 +185,26 @@ class Window:
         # SETS CURVE POSITIONS BASED ON PRODUCT USING IFs
         #shift the intercepts by demand
         self.xInterceptText = Text(Point(self.demandCurve.getP2().getX(),(self.y*15)//32),"("+str(self.xIntercept)+", 0)")
+        self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
+        self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
+        self.setCurvePoints()
+
+    def setCurvePoints(self):   #This separates the top code so that it won't redraw overlapping Coordinate points on the graph
         self.xInterceptText.undraw()
         self.xInterceptText.draw(self.win)
-        self.yInterceptText = Text(Point((self.x*17)//32,self.demandCurve.getP1().getY()),"(0, "+str(self.yIntercept)+")")
         self.yInterceptText.undraw()
         self.yInterceptText.draw(self.win)
-        self.textMidLine = Text(Point(self.xMidPoint+20,self.yMidPoint-10),"("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
         self.textMidLine.undraw()
         self.textMidLine.draw(self.win)
-
+        
     def shiftCurve(self,product):
         tempX = self.xIntercept 
         self.xIntercept += product[2]
         self.yIntercept += (self.yIntercept/tempX)*(product[2])
         self.xInterceptText.setText("("+str(self.xIntercept)+", 0)")
         self.yInterceptText.setText("(0, "+str(self.yIntercept)+")")
-        self.setCurve()
+        self.textMidLine.setText("("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
+        self.setCurvePoints()
        
     def setRevenue(self):
         """
