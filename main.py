@@ -56,7 +56,7 @@ class Window:
         #[Title,text,demand-shift]
         self.cakeNews = [   #I placed the list of news here so that its changes can be preserved
             ["CAKES ARE UNHEALTHY","The University of Antarctica has\nfound a shocking discovery on\nthe strong correlation between cakes and\ndiabetes. \'They have too much\nsugar, the public should really refrain\nfrom eating them\' says Dr. Michael,\nthe leading scientist in this study.",-20],
-            ["POLICE SHOOTING SPARKS\nPROTESTS","An amateur video shot by a\nbystander, officer Repucci fatally shot an\nunarmed 9 year old girl while she was\nmaking cake. Protesters are encouraging\neveryone to buy cakes to support their\ncampaign in prosecuting Repucci.",50],
+            ["POLICE SHOOTING SPARKS\nPROTESTS","In an amateur video shot by a\nbystander, officer Repucci fatally shot an\nunarmed 9 year old girl while she was\nmaking cake. Protesters are encouraging\neveryone to buy cakes to support their\ncampaign in prosecuting Repucci.",50],
             ["NATIONAL CAKE DAY","The President of the United States has\nofficial declared this day to be National\nCake Day. Citizens world-wide are\ncelebrating by buying more cake.",200],
             ]
         self.carNews = [
@@ -301,7 +301,7 @@ class Window:
         self.setIntercepts()
         self.setCurve()
         self.loopDay(product,w)
-        button("Game Over",24,False)
+        button("Game Over.\n\nYou've made it through "+str(self.day-1)+" days",17,False)
 
     def loopDay(self,product,w):  #Only certain parts need to be looped
         news = w.getNews(product)
