@@ -5,13 +5,36 @@
 | | \___/ | | | | | |_  |  _  | | |_| |_  | |___  | |     | |__  |  _  | | |___   | | | |
 |_|       |_| |_| |___| |_| |_| |_______| |_____| |_|     |____| |_| |_| |_____|  |_| |_|     
  Fixed Input Cost Market Simulation 
- Date: 1/31/17
- Period:1
+ Date Started: 1/31/17
  """
 
 from graphics import *
+"""
+Author: John M. Zelle
+Date: 2017
+Title: Graphics
+Version: 5.0
+Type: Python
+URL: http://mcsp.wartburg.edu/zelle/python/
+"""
 import random
+"""
+Author: Python Library
+Date: 2017
+Title: 9.6 Random
+Version: 2.7.13
+Type: Python
+URL: https://docs.python.org/2/library/random.html
+"""
 import time
+"""
+Author: Python Library
+Date: 2017
+Title: 15.3 time
+Verson: 2.7.13
+Type: Python
+URL: https://docs.python.org/2/library/time.html
+"""
 class Window:
     def __init__(self):
         self.x = 800
