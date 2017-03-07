@@ -91,7 +91,7 @@ class Window:
         self.textDay = Text(Point(self.x//4,self.y//12),self.name+"'s "+self.product+" shop. Day "+str(self.day)) #setting texts
         self.textDay.setSize(self.textSize)
         self.textDay.draw(self.win)
-        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Account Balance: $"+str(self.accountBalance))
+        self.textAccountBalance = Text(Point((self.x//4)+30,self.y//4),"Starting Amount: $"+str(self.accountBalance))
         self.textAccountBalance.setSize(self.textSize)
         self.textAccountBalance.draw(self.win)
         self.textStock = Text(Point(self.x//4,(self.y*5)//12),"Capital Stock: "+str(self.stock))
@@ -224,9 +224,9 @@ class Window:
         tempX = self.xIntercept 
         self.xIntercept += product[2]
         self.yIntercept += (self.yIntercept/tempX)*(product[2])
-        self.xInterceptText.setText("("+str(self.xIntercept)+", 0)")
-        self.yInterceptText.setText("(0, "+str(self.yIntercept)+")")
-        self.textMidLine.setText("("+str(self.xIntercept//2)+", "+str(self.yIntercept//2)+")")
+        self.xInterceptText.setText("("+str(round(self.xIntercept,2))+", 0)")
+        self.yInterceptText.setText("(0, "+str(round(self.yIntercept,2))+")")
+        self.textMidLine.setText("("+str(round(self.xIntercept//2,2))+", "+str(round(self.yIntercept//2,2))+")")
         self.setCurvePoints()
        
     def setRevenue(self):
@@ -240,6 +240,7 @@ class Window:
         Since we're putting PRICE as input, we need to find the INVERSE of the equation
 
         quantity = -1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)
+
         Revenue = Price * Quantity
         """
         print("Price: "+str(self.price))
