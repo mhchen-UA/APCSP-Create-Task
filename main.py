@@ -245,14 +245,16 @@ class Window:
         print("Price: "+str(self.price))
         if self.price > self.yIntercept:
             self.revenue = 0
+            self.quantitySold = 0
         else:
             self.quantitySold = round((-1*((self.price-self.yIntercept)*(self.xIntercept))/(self.yIntercept)))
             self.revenue = round(self.price *self.quantitySold,2)
-        print("Quantity Sold: "+str(self.quantitySold))
+        print("Quantity Sold in setRevenue(): "+str(self.quantitySold))
         print("Revenue: "+str(self.revenue))
         self.textRevenue.setText("Revenue: $"+str(round(self.revenue,2)))
         
     def decreaseStock(self):
+        print("Quantity Sold in decreaseStock(): "+str(self.quantitySold))
         self.stock -= self.quantitySold
         self.textStock.setText("Capital Stock: "+str(self.stock))
     
