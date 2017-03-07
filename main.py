@@ -300,8 +300,8 @@ class Window:
         self.setBalance()
         self.setIntercepts()
         self.setCurve()
-        while True:
-            self.loopDay(product,w)
+        self.loopDay(product,w)
+        button("Game Over",24,False)
 
     def loopDay(self,product,w):  #Only certain parts need to be looped
         news = w.getNews(product)
@@ -319,6 +319,10 @@ class Window:
         self.day+=1
         self.setDay()
         self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
+        if not self.accountBalance < 0:
+            self.loopDay(product,w)
+        else:
+            return
     
 def button(text,textSize=24,entry=True): #I Used ABSTRACTION to make a button with a flexible text for input
         w = GraphWin("",300,200)
