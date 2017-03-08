@@ -1,13 +1,3 @@
-""" 
- ___     ___   _         _  	           _____   _       ____   _       _____
-|   \   /   | |_|  ___  | |      _____    |  __ | | |     |  __| | |     |  __ |  ______
-| |\ \_/ /| |  _  |  _| | |___  |  _  |   |  ___| | |     | |    | |___  |  ___| \   _  |
-| | \___/ | | | | | |_  |  _  | | |_| |_  | |___  | |     | |__  |  _  | | |___   | | | |
-|_|       |_| |_| |___| |_| |_| |_______| |_____| |_|     |____| |_| |_| |_____|  |_| |_|     
- Fixed Input Cost Market Simulation 
- Date Started: 1/31/17
- """
-
 from graphics import *
 """
 Author: John M. Zelle
@@ -143,7 +133,7 @@ class Window:
         self.xAxis = Text(Point((self.x*12)//16,(self.y*15)//32),"Quantity")
         self.xAxis.draw(self.win)
 
-    def setAccountBalance(self,product):
+    def setAccountBalance(self,product): #Sets the initial account balance for each product
         if product.lower() == "car":
             self.accountBalance = 100000
         elif product.lower() == "cake":
@@ -173,7 +163,7 @@ class Window:
         return theNews
 
 
-    def setNews(self,product):
+    def setNews(self,product):   #Changes the text of the news
         self.newsBox = Rectangle(Point((self.x*9)//16,(self.y*19)//32),Point((self.x*15)//16,(self.y*15)//16))
         self.newsBox.draw(self.win)
         self.newsTitle = Text(Point((self.x*3)//4,(self.y*11)//16),product[0])
@@ -183,17 +173,17 @@ class Window:
         self.newsBody.setSize(15)
         self.newsBody.draw(self.win)
 
-    def setCost(self,product,quantityBought):
+    def setCost(self,product,quantityBought):  #Sets the input cost
         if product.lower() == "gas":
-            self.inputCost = 4 #* quantityBought
+            self.inputCost = 4 
         elif product.lower() == "cake":
-            self.inputCost = 3 #* quantityBought
+            self.inputCost = 3
         elif product.lower() == "car":
-            self.inputCost = 5000 #* quantityBought
+            self.inputCost = 5000
         self.textInputCost.setText("Total Cost: "+str(self.inputCost*quantityBought))
         self.totalInputCost = self.inputCost*quantityBought
 
-    def setIntercepts(self):
+    def setIntercepts(self): #Sets the graph intercepts
         if self.product.lower() == "cake":
             self.xIntercept = 40
             self.yIntercept = 28
@@ -220,7 +210,7 @@ class Window:
         self.textMidLine.undraw()
         self.textMidLine.draw(self.win)
         
-    def shiftCurve(self,product):
+    def shiftCurve(self,product): #Shifts the intercepts based on the news
         tempX = self.xIntercept 
         self.xIntercept += product[2]
         self.yIntercept += (self.yIntercept/tempX)*(product[2])
