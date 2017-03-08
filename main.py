@@ -15,7 +15,7 @@ Date: 2017
 Title: Graphics
 Version: 5.0
 Type: Python
-URL: http://mcsp.wartburg.edu/zelle/python/
+URL: http://mcsp.wartburg.edu/zelle/python/graphics.py
 """
 import random
 """
@@ -135,7 +135,7 @@ class Window:
         self.yMaxRevenueLine.draw(self.win)
         self.demandText = Text(Point((self.x*26)//32,(self.y*5)//16),"Demand Curve")
         self.demandText.draw(self.win)
-        self.graphTitle = Text(Point((self.x*24)//32,self.y//32),"Aggregate Demand Graph")
+        self.graphTitle = Text(Point((self.x*24)//32,self.y//32),"Firm Demand Graph")
         self.graphTitle.setSize(self.textSize)
         self.graphTitle.draw(self.win)
         self.yAxis = Text(Point((self.x*17)//32,(self.y)//4),"Price")
@@ -320,7 +320,7 @@ class Window:
         self.day+=1
         self.setDay()
         self.win.setBackground(color_rgb(random.randint(1,255),random.randint(1,255),random.randint(1,255)))
-        if not self.accountBalance < 0:
+        if self.stock < 0 or not self.accountBalance < 0:
             self.loopDay(product,w)
         else:
             return
